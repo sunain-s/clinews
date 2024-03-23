@@ -55,7 +55,32 @@ fn main() -> Result<(), Box<dyn Error>>{
     let api_key: String = std::env::var("API_KEY")?;
     
     println!("Enter corresponding number to choose:\n\n1) View top headlines\n2) Search for results");
-    
+    let url: String = loop {
+        let choice: String = readline_string_clean();
+        let choice: u8 = match choice.trim().parse() {
+            Ok(num) => {num}
+            Err(_) => {
+                println!("Enter a valid number");
+                continue;
+            }
+        };
+
+        if choice > 2 {
+            println!("Enter a valid number");
+            continue;
+        } else {
+            let url: String = {
+                if choice == 1 {
+                    top_headlines()
+                } else {
+                    search_headlines()
+                }
+            };
+            break url;
+        }
+    };
+        
+    let url: String = format!("{}{}", url, api_key);
     let articles: Articles = get_articles(&url)?;
     render_articles(&articles);
     Ok(())
