@@ -6,14 +6,7 @@ use dotenv::dotenv;
 use colour::{yellow, blue};
 use newsapi::{Articles, get_articles};
 
-
-
-fn render_articles(articles: &Articles, n: usize) {
-    for i in 1..n + 1 {
-        yellow!("> {}\n", &articles.articles[i].title);
-        blue!("> {}\n\n", &articles.articles[i].url);
-    }
-}
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 fn readline_string_clean() -> String {
     let mut s: String = String::new();
@@ -27,14 +20,43 @@ fn readline_string_clean() -> String {
     return s;
 }   
 
-fn main() -> Result<(), Box<dyn Error>>{
-    dotenv()?;
-    let api_key: String = std::env::var("API_KEY")?;
+fn render_articles(articles: &Articles) {
+    for a in &articles.articles {
+        yellow!("> {}\n", a.title);
+        blue!("> {}\n\n", a.url);
+    }
+}
 
+fn top_headlines() -> String {
     print!("Enter 2-letter ISO 3166-1 country code:  ");
     let country_code: String = readline_string_clean();
     let url: String = format!("https://newsapi.org/v2/top-headlines?country={}&apiKey=", country_code);
+    return url;
+}
+
+fn search_headlines() -> String {
+    print!("Enter 2-letter ISO-639-1 language code:  ");
+    let lang_code: String = readline_string_clean();
+
+    print!("Enter search term:  ");
+    let search_term: String = readline_string_clean();
+
+    print!("Enter number of results:  ");
+    let num_results: usize = readline_string_clean().parse().unwrap();
+
+    let url: String = format!("https://newsapi.org/v2/everything?q={}&searchin=title,description&language={}&pageSize={}&apiKey=", search_term, lang_code, num_results);
+    return url;
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+fn main() -> Result<(), Box<dyn Error>>{
+    dotenv()?;
+    let api_key: String = std::env::var("API_KEY")?;
+    
+    println!("Enter corresponding number to choose:\n\n1) View top headlines\n2) Search for results");
+    
     let articles: Articles = get_articles(&url)?;
-    render_articles(&articles, num_results);
+    render_articles(&articles);
     Ok(())
 }
