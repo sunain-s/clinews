@@ -27,7 +27,6 @@ pub struct Article {
 
 pub fn get_articles(url: &str) -> Result<Articles, NewsApiError> {
     let response: String = ureq::get(url).call().map_err(|e |NewsApiError::RequestFailed(e))?.into_string().map_err(|e |NewsApiError::ResponseToStringFailed(e))?;
-    println!("{response}");
     let articles: Articles = serde_json::from_str(&response).map_err(|e |NewsApiError::ArticleParseFailed(e))?;
     Ok(articles)
 }
