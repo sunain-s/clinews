@@ -28,20 +28,20 @@ fn render_articles(articles: &Articles) {
 }
 
 fn top_headlines() -> String {
-    print!("Enter 2-letter ISO 3166-1 country code:  ");
+    println!("Enter 2-letter ISO 3166-1 country code:  ");
     let country_code: String = readline_string_clean();
     let url: String = format!("https://newsapi.org/v2/top-headlines?country={}&apiKey=", country_code);
     return url;
 }
 
 fn search_headlines() -> String {
-    print!("Enter 2-letter ISO-639-1 language code:  ");
+    println!("Enter 2-letter ISO-639-1 language code:  ");
     let lang_code: String = readline_string_clean();
 
-    print!("Enter search term:  ");
+    println!("Enter search term:  ");
     let search_term: String = readline_string_clean();
 
-    print!("Enter number of results:  ");
+    println!("Enter number of results:  ");
     let num_results: usize = readline_string_clean().parse().unwrap();
 
     let url: String = format!("https://newsapi.org/v2/everything?q={}&searchin=title,description&language={}&pageSize={}&apiKey=", search_term, lang_code, num_results);
